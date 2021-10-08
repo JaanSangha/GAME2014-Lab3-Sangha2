@@ -22,15 +22,17 @@ public class BulletManager : MonoBehaviour
     {
         for(int i = 0; i < bulletNumber; i++)
         {
-            var temp_bullet = Instantiate(bulletPrefab);
-            temp_bullet.SetActive(false);
-            temp_bullet.transform.parent = transform;
-            bulletPool.Enqueue(temp_bullet);
+            AddBullet();
         }
     }
 
     public GameObject GetBullet(Vector2 position)
     {
+        if (bulletPool.Count < 1)
+        {
+            AddBullet();
+            bulletNumber++;
+        }
         var temp_bullet = bulletPool.Dequeue();
         temp_bullet.transform.position = position;
         temp_bullet.SetActive(true);
@@ -41,5 +43,13 @@ public class BulletManager : MonoBehaviour
     {
         returned_bullet.SetActive(false);
         bulletPool.Enqueue(returned_bullet);
+    }
+
+    public void AddBullet()
+    {
+        var temp_bullet = Instantiate(bulletPrefab);
+        temp_bullet.SetActive(false);
+        temp_bullet.transform.parent = transform;
+        bulletPool.Enqueue(temp_bullet);
     }
 }
